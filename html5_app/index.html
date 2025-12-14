@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fitness Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>Fitness Calculator</h1>
+        <p>Calculate your TDEE, BMR, and BMI instantly.</p>
+      </header>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="basics">Basics</button>
+        <button class="tab-btn" data-tab="macros">Macro Plan</button>
+        <button class="tab-btn" data-tab="goals">Goals</button>
+      </div>
+
+      <main>
+        <!-- BASICS TAB -->
+        <div id="tab-basics" class="tab-content active">
+            <div class="card input-section">
+              <h2>Your Stats</h2>
+              
+              <div class="input-group">
+                <label>System</label>
+                <div class="toggle-container">
+                  <button id="btn-imperial" class="toggle-btn active">Imperial</button>
+                  <button id="btn-metric" class="toggle-btn">Metric</button>
+                </div>
+              </div>
+
+              <div class="input-grid">
+                <div class="field">
+                  <label for="gender">Gender</label>
+                  <select id="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="age">Age</label>
+                  <input type="number" id="age" placeholder="25" />
+                </div>
+
+                <div class="field">
+                  <label for="weight">Weight <span id="unit-weight">(lbs)</span></label>
+                  <input type="number" id="weight" placeholder="150" />
+                </div>
+
+                <div class="field height-field">
+                  <label>Height</label>
+                  <div id="height-imperial" class="height-inputs">
+                    <input type="number" id="height-ft" placeholder="5" />
+                    <span>ft</span>
+                    <input type="number" id="height-in" placeholder="10" />
+                    <span>in</span>
+                  </div>
+                  <div id="height-metric" class="height-inputs hidden">
+                    <input type="number" id="height-cm" placeholder="178" />
+                    <span>cm</span>
+                  </div>
+                </div>
+
+                <div class="field">
+                    <label for="waist">Waist <span id="unit-waist">(in)</span></label>
+                    <input type="number" id="waist" placeholder="32" />
+                </div>
+
+                <div class="field">
+                    <label for="bfpct">Body Fat %</label>
+                    <input type="number" id="bfpct" placeholder="Auto" />
+                </div>
+                
+                <div class="field full-width">
+                  <label for="activity">Activity Level</label>
+                  <select id="activity">
+                    <option value="1.2">Sedentary (Office job)</option>
+                    <option value="1.375">Light Exercise (1-2 days/week)</option>
+                    <option value="1.55">Moderate Exercise (3-5 days/week)</option>
+                    <option value="1.725">Heavy Exercise (6-7 days/week)</option>
+                    <option value="1.9">Athlete (2x per day)</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                    <label for="bmr-method">BMR Formula</label>
+                    <select id="bmr-method">
+                        <option value="msj">Mifflin-St Jeor</option>
+                        <option value="hb">Harris-Benedict</option>
+                        <option value="km">Katch-McArdle</option>
+                        <option value="average">Average</option>
+                    </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="card results-section">
+              <h2>Results</h2>
+              <div class="results-grid">
+                <div class="result-item">
+                  <h3>BMR</h3>
+                  <div class="value" id="res-bmr">--</div>
+                  <div class="subtitle">Calories/day</div>
+                </div>
+                <div class="result-item">
+                  <h3>TDEE</h3>
+                  <div class="value highlight" id="res-tdee">--</div>
+                  <div class="subtitle">Maintenance Calories</div>
+                </div>
+                 <div class="result-item">
+                  <h3>BMI</h3>
+                  <div class="value" id="res-bmi">--</div>
+                  <div class="subtitle">Body Mass Index</div>
+                </div>
+                <!-- New Results -->
+                <div class="result-item">
+                    <h3>Body Fat</h3>
+                    <div class="value" id="res-bf">--</div>
+                    <div class="subtitle">Percent</div>
+                </div>
+                <div class="result-item">
+                    <h3>LBM</h3>
+                    <div class="value" id="res-lbm">--</div>
+                    <div class="subtitle">Lean Body Mass</div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <!-- MACROS TAB -->
+        <div id="tab-macros" class="tab-content hidden">
+            <div class="card">
+                <h2>Cycle & Splits</h2>
+                <div class="input-grid">
+                    <div class="field full-width">
+                        <label for="cycle-split">Cycle Strategy</label>
+                        <select id="cycle-split">
+                            <option value="recomp">Standard Recomp (-20/+20)</option>
+                            <option value="cut">Weight Loss (-20/0)</option>
+                            <option value="hardcut">Faster Weight Loss (-30/-10)</option>
+                            <option value="leanbulk">Lean Massing (-10/+20)</option>
+                            <option value="maintain">Maintain (0/0)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="protein-method">Protein Setting</label>
+                        <select id="protein-method">
+                            <option value="1glb">1g / lb Bodyweight</option>
+                            <option value="1.5glbm">1.5g / lb LBM</option>
+                            <option value="3gkg">3g / kg Bodyweight</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="workouts-week">Workouts / Week</label>
+                        <input type="number" id="workouts-week" value="3" min="1" max="7" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="split-cards">
+                <!-- REST DAY -->
+                <div class="card day-card">
+                    <h2>Rest Day</h2>
+                    <div class="tdee-input-group">
+                        <label>% TDEE</label>
+                        <input type="number" id="rest-tdee-pct" value="-20" />
+                        <span id="rest-cals-display" class="cals-display">-- kcal</span>
+                    </div>
+                    
+                    <div class="macro-sliders">
+                        <div class="slider-row">
+                            <label>Protein (g)</label>
+                            <input type="range" id="rest-p-slider" min="0" max="500" value="150" class="slider-p">
+                            <span id="rest-p-val">150g</span>
+                        </div>
+                        <div class="slider-row">
+                            <label>Carbs (g)</label>
+                            <input type="range" id="rest-c-slider" min="0" max="1000" value="50" class="slider-c">
+                            <span id="rest-c-val">50g</span>
+                        </div>
+                        <div class="slider-row">
+                            <label>Fats (g)</label>
+                            <input type="range" id="rest-f-slider" min="0" max="300" value="50" class="slider-f">
+                            <span id="rest-f-val">50g</span>
+                        </div>
+                    </div>
+
+                    <div class="macro-list" id="rest-macros">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- WORKOUT DAY -->
+                <div class="card day-card">
+                    <h2>Workout Day</h2>
+                     <div class="tdee-input-group">
+                        <label>% TDEE</label>
+                        <input type="number" id="workout-tdee-pct" value="20" />
+                        <span id="workout-cals-display" class="cals-display">-- kcal</span>
+                    </div>
+
+                    <div class="macro-sliders">
+                        <div class="slider-row">
+                            <label>Protein (g)</label>
+                            <input type="range" id="workout-p-slider" min="0" max="500" value="150" class="slider-p">
+                            <span id="workout-p-val">150g</span>
+                        </div>
+                        <div class="slider-row">
+                            <label>Carbs (g)</label>
+                            <input type="range" id="workout-c-slider" min="0" max="1000" value="300" class="slider-c">
+                            <span id="workout-c-val">300g</span>
+                        </div>
+                        <div class="slider-row">
+                            <label>Fats (g)</label>
+                            <input type="range" id="workout-f-slider" min="0" max="300" value="50" class="slider-f">
+                            <span id="workout-f-val">50g</span>
+                        </div>
+                    </div>
+
+                    <div class="macro-list" id="workout-macros">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card summary-section">
+                <h2>Weekly Summary</h2>
+                <div class="summary-grid">
+                    <div class="sum-item">
+                        <h3>Week TEE</h3>
+                        <div class="value" id="sum-tee">--</div>
+                    </div>
+                    <div class="sum-item">
+                         <h3>Week TDEE</h3>
+                        <div class="value" id="sum-tdee">--</div>
+                    </div>
+                    <div class="sum-item">
+                         <h3>Week Cals</h3>
+                        <div class="value" id="sum-cals">--</div>
+                    </div>
+                    <div class="sum-item">
+                         <h3>Over/Under</h3>
+                        <div class="value" id="sum-over">--</div>
+                    </div>
+                     <div class="sum-item">
+                         <h3>Change</h3>
+                        <div class="value" id="sum-change">--</div>
+                        <div class="subtitle">lbs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GOALS TAB -->
+        <div id="tab-goals" class="tab-content hidden">
+            <div class="card">
+                <h2>Goal Projections</h2>
+                <div class="results-grid">
+                     <div class="result-item">
+                        <h3>Wkly Change</h3>
+                        <div class="value" id="goal-loss">--</div>
+                        <div class="subtitle">lbs/week</div>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+      </main>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>
