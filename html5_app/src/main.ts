@@ -67,6 +67,10 @@ const sumChange = document.querySelector<HTMLElement>('#sum-change')!
 const divRestMacros = document.querySelector<HTMLElement>('#rest-macros')!
 const divWorkoutMacros = document.querySelector<HTMLElement>('#workout-macros')!
 
+// Pie Charts
+const restPieChart = document.querySelector<HTMLElement>('#rest-pie-chart')!
+const workoutPieChart = document.querySelector<HTMLElement>('#workout-pie-chart')!
+
 // Tabs
 const tabBtns = document.querySelectorAll('.tab-btn')
 const tabContents = document.querySelectorAll('.tab-content')
@@ -370,12 +374,45 @@ function updateSlidersFromCalculated() {
     spanWorkoutFVal.textContent = wF + 'g';
 }
 
+function updatePieChart(element: HTMLElement, pPct: number, cPct: number, fPct: number) {
+    // Create conic gradient based on percentages
+    // Start at -90deg to start from top
+    const pEnd = pPct * 3.6; // Convert % to degrees
+    const cEnd = pEnd + (cPct * 3.6);
+    const fEnd = cEnd + (fPct * 3.6);
+    
+    element.style.background = `conic-gradient(
+        from -90deg,
+        #ef4444 0deg,
+        #ef4444 ${pEnd}deg,
+        #10b981 ${pEnd}deg,
+        #10b981 ${cEnd}deg,
+        #f59e0b ${cEnd}deg,
+        #f59e0b ${fEnd}deg
+    )`;
+}
+
 function renderMacros() {
     spanRestCalsDisplay.textContent = Math.round(user.restcals).toLocaleString() + ' kcal';
     spanWorkoutCalsDisplay.textContent = Math.round(user.workoutcals).toLocaleString() + ' kcal';
 
     renderMacroList(divRestMacros, user.restCollection);
     renderMacroList(divWorkoutMacros, user.workoutCollection);
+    
+    // Update pie charts
+    updatePieChart(
+        restPieChart,
+        user.restCollection[0].pct,
+        user.restCollection[1].pct,
+        user.restCollection[2].pct
+    );
+    
+    updatePieChart(
+        workoutPieChart,
+        user.workoutCollection[0].pct,
+        user.workoutCollection[1].pct,
+        user.workoutCollection[2].pct
+    );
 }
 
 function renderMacroList(container: HTMLElement, collection: any[]) {
