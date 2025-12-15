@@ -234,6 +234,7 @@ function handleInput(e: Event) {
 }
 
 function handleSliderChange(e: Event) {
+    e.preventDefault();
     isManualEdit = true;
     inputCycle.value = 'custom';
     
