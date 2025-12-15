@@ -17,7 +17,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: html5_app
+        working-directory: ./html5_app
 
     steps:
       - uses: actions/checkout@v4
